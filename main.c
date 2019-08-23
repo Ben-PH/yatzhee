@@ -3,6 +3,7 @@
 #include<stdbool.h>
 
 #define DICE_SIZE 20
+#define DICE_MAX 6
 char Dice[DICE_SIZE] = {0};
 void selsort(char Dice[]);
 int psmallStraight(char Dice[]);
@@ -40,15 +41,17 @@ bool errorCheck(const char Dice[])
 }
 void keepDice(char Dice[])
 {
-    int count_1=0;
-    int count_2=0;
-    int count_3=0;
-    int count_4=0;
-    int count_5=0;
-    int count_6=0;
+    int rollcount[DICE_MAX] = {0};
 
     for(int i = 0; i<strlen(Dice); i++)
     {
+        for (int j = 0; j< DICE_MAX; j++) {
+            // you can turn Dice[i] into its number. If you have a look in your three of a kind
+            // and four of a kind functions to see what i mean
+            
+            // with that number, how can you turn all the 'count_n++;' int one instruction?
+        }
+    }
         if(Dice[i]=='1')
         {
             count_1++;
@@ -73,38 +76,65 @@ void keepDice(char Dice[])
         {
             count_6++;
         }
-    }
+}
 
-    int score;
-    void threeOfAKind()
-    {
-        score=(Dice[0]-'0')+(Dice[2]-'0')+(Dice[4]-'0')+(Dice[6]-'0')+(Dice[8]-'0');
-    }
-    void fourOfAKind()
-    {
-        score=(Dice[0]-'0')+(Dice[2]-'0')+(Dice[4]-'0')+(Dice[6]-'0')+(Dice[8]-'0');
-    }
-    void fullHouse()
-    {
-        score=25;
-    }
-    void smallStraight()
-    {
-        score=30;
-    }
-    void straight()
-    {
-        score=40;
-    }
-    void yahtzee()
-    {
-        score=50;
-    }
-    void chance()
-    {
-        score=((Dice[0]-'0')+(Dice[2]-'0')+(Dice[4]-'0')+(Dice[6]-'0')+(Dice[8]-'0'));
-        return score;
-    }
+// These are now helper functions that you call from elsewhere.
+// score is now a global variable, which you don't want. 
+// Instead, consider this
+
+void swap(int *left, int *right) {
+    // ...
+}
+// IS ESSENTIALLY THE SAME AS
+void swap(int int_array[], len 2) {
+    int temp = int_array[0];
+    int_array[0] = int_array[1];
+    int_array[1] = temp;
+}
+
+// an array variable is little more than a pointer.
+// going to index 0 with int_array[0] is the same as *int_array
+// int_array[1] much the same, except "one element across from" *int_array
+
+// You can use this to call threeOfAKind like so:
+void example_call_with_array_arg() {
+    int int_arr[DICE_MAX] = {0};
+    
+    // ...do something to give int_arr other values;
+    int score = threeOfAKind(int_arr, DICE_MAX);
+}
+int score;
+void threeOfAKind()
+{
+    score=(Dice[0]-'0')+(Dice[2]-'0')+(Dice[4]-'0')+(Dice[6]-'0')+(Dice[8]-'0');
+}
+void fourOfAKind()
+{
+    score=(Dice[0]-'0')+(Dice[2]-'0')+(Dice[4]-'0')+(Dice[6]-'0')+(Dice[8]-'0');
+}
+void fullHouse()
+{
+    score=25;
+}
+void smallStraight()
+{
+    score=30;
+}
+void straight()
+{
+    score=40;
+}
+void yahtzee()
+{
+    score=50;
+}
+void chance()
+{
+    score=((Dice[0]-'0')+(Dice[2]-'0')+(Dice[4]-'0')+(Dice[6]-'0')+(Dice[8]-'0'));
+    return score;
+}
+
+    // How would you do this count_n being an array instead?
     int input;
     if(count_1==5||count_2==5||count_3==5||count_4==5||count_5==5||count_6==5)
     {
@@ -247,6 +277,7 @@ int main()
     }
 }
 
+// write some tests for this. Examples below
 void selsort(char Dice[])
 {
     int i, j, min, temp;
@@ -269,6 +300,24 @@ void selsort(char Dice[])
 
     }
 }
+
+// example tests. Try to think of more. If you come across a bug in your code, write a test that wont pass
+// untill you fix the bug
+void test_selection_empty() {
+    char test_arr[0] = {0};
+    char target_arr[0] = {0};
+    selsort(test_arr, 0);
+    assert(equal_arrays(test_arr, target_arr, 0) == TRUE);
+}
+
+void test_backwards() {
+    char test_arr[26] = "zyxwvutsrqponmlkjihgfedcba";
+    char target_arr[26] = "abcdefghijklmnopqrstuvwxyz";
+    selsort(test_arr, 26);
+    assert(equal_arrays(test_arr, target_arr, 0) == TRUE);
+}
+
+
 int psmallStraight(char Dice[])
 {
     selsort(Dice);
